@@ -7,5 +7,4 @@ export const NAV_PAGES: NavPage[] = [
   { label: "Home", path: "/" },
   { label: "Hospitals", path: "/hospitals" },
   { label: "Doctors", path: "/doctors" },
-  { label: "Log In", path: "/login" },
 ];

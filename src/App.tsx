@@ -1,22 +1,43 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Home } from "./components/pages/Home";
 import { Hospitals } from "./components/pages/Hospitals";
 import { Doctors } from "./components/pages/Doctors";
-import { LogIn } from "./auth/LogIn";
-import ResponsiveAppBar from "./components/ResponsiveNavBar/ResponsiveNavBar";
+import LogIn from "./components/authPages/LogIn";
+import ResponsiveAppBar from "./components/layout/ResponsiveNavBar/ResponsiveNavBar";
+import { RequireAuth } from "./auth/RequireAuth";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <ResponsiveAppBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/hospitals" element={<Hospitals />} />
-          <Route path="/doctors" element={<Doctors />} />
-          <Route path="/login" element={<LogIn />} />
-        </Routes>
-      </BrowserRouter>
+      <ResponsiveAppBar />
+      <Routes>
+        <Route path="/login" element={<LogIn />} />
+
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Home />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/hospitals"
+          element={
+            <RequireAuth>
+              <Hospitals />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/doctors"
+          element={
+            <RequireAuth>
+              <Doctors />
+            </RequireAuth>
+          }
+        />
+      </Routes>
     </>
   );
 }

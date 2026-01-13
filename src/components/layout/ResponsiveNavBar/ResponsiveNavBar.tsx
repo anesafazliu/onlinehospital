@@ -9,27 +9,37 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Switch from "@mui/material/Switch";
-import { useNavigate } from "react-router-dom";
-import { NAV_PAGES } from "../../types/navigation";
+import { useNavigate, useLocation } from "react-router-dom";
+import { NAV_PAGES } from "../../../types/navigation";
+
+import { useAuth } from "../../../auth/useAuth";
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
+  const location = useLocation();
+  const { user, logout, isReady } = useAuth();
 
-  // This is for your light/dark toggle
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [darkMode, setDarkMode] = React.useState(false);
+
+  const hideNav = location.pathname === "/login";
+  if (hideNav) return null;
+
   const handleDarkModeToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDarkMode(event.target.checked);
-    // Here you could also call a function to actually toggle theme
-    console.log("Dark mode:", event.target.checked);
   };
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleCloseNavMenu = () => setAnchorElNav(null);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
+  const isLoggedIn = isReady && !!user;
 
   return (
     <AppBar position="static" sx={{ bgcolor: "#14274E" }}>
@@ -46,6 +56,7 @@ function ResponsiveAppBar() {
           <IconButton onClick={handleOpenNavMenu} color="inherit">
             <MenuIcon />
           </IconButton>
+
           <Menu
             anchorEl={anchorElNav}
             open={Boolean(anchorElNav)}
@@ -62,6 +73,21 @@ function ResponsiveAppBar() {
                 {page.label}
               </MenuItem>
             ))}
+
+            <MenuItem
+              onClick={() => {
+                handleCloseNavMenu();
+                
+                if (isLoggedIn){
+                  handleLogout(); 
+                }
+                else {
+                  navigate("/login");
+                }
+              }}
+            >
+              {isLoggedIn ? "Logout" : "Login"}
+            </MenuItem>
           </Menu>
         </Box>
 
@@ -82,7 +108,19 @@ function ResponsiveAppBar() {
             </Button>
           ))}
 
-          {/* The Switch goes here, right after the buttons */}
+          {isLoggedIn && (
+            <Typography sx={{ color: "white", ml: 3, opacity: 0.9 }}>
+              {user!.role}
+            </Typography>
+          )}
+
+          <Button
+            onClick={() => (isLoggedIn ? handleLogout() : navigate("/login"))}
+            sx={{ color: "white", ml: 2, border: "1px solid rgba(255,255,255,0.35)" }}
+          >
+            {isLoggedIn ? "Logout" : "Login"}
+          </Button>
+
           <Switch
             checked={darkMode}
             onChange={handleDarkModeToggle}
