@@ -3,6 +3,7 @@ import { Home } from "./components/pages/Home";
 import { Hospitals } from "./components/pages/Hospitals";
 import { Doctors } from "./components/pages/Doctors";
 import { LogIn } from "./auth/LogIn";
+import { Register } from "./auth/Register";
 import ResponsiveAppBar from "./components/ResponsiveNavBar/ResponsiveNavBar";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/hospitals" element={<Hospitals />} />
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/login" element={<LogIn />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </>

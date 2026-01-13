@@ -9,43 +9,54 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Switch from "@mui/material/Switch";
+import HomeIcon from "@mui/icons-material/Home";
 import { useNavigate } from "react-router-dom";
 import { NAV_PAGES } from "../../types/navigation";
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
 
-  // This is for your light/dark toggle
   const [darkMode, setDarkMode] = React.useState(false);
+
   const handleDarkModeToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDarkMode(event.target.checked);
-    // Here you could also call a function to actually toggle theme
     console.log("Dark mode:", event.target.checked);
   };
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleCloseNavMenu = () => setAnchorElNav(null);
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
 
   return (
     <AppBar position="static" sx={{ bgcolor: "#14274E" }}>
       <Toolbar sx={{ px: 2 }}>
+        <HomeIcon sx={{ color: "white", fontSize: 28 }} />
         <Typography
           variant="h6"
-          sx={{ fontWeight: 700, letterSpacing: ".15rem", cursor: "pointer" }}
+          noWrap
+          sx={{
+            fontWeight: 700,
+            letterSpacing: ".15rem",
+            cursor: "pointer",
+          }}
           onClick={() => navigate("/")}
         >
           Online Hospital
         </Typography>
-
+        {/* Mobile Menu */}
         <Box sx={{ display: { xs: "flex", md: "none" }, ml: "auto" }}>
           <IconButton onClick={handleOpenNavMenu} color="inherit">
             <MenuIcon />
           </IconButton>
+
           <Menu
             anchorEl={anchorElNav}
             open={Boolean(anchorElNav)}
@@ -64,14 +75,15 @@ function ResponsiveAppBar() {
             ))}
           </Menu>
         </Box>
-
         <Box
           sx={{
             ml: "auto",
             display: { xs: "none", md: "flex" },
             alignItems: "center",
+            gap: 2,
           }}
         >
+          {" "}
           {NAV_PAGES.map((page) => (
             <Button
               key={page.label}
@@ -81,8 +93,7 @@ function ResponsiveAppBar() {
               {page.label}
             </Button>
           ))}
-
-          {/* The Switch goes here, right after the buttons */}
+          {/* Dark mode switch */}
           <Switch
             checked={darkMode}
             onChange={handleDarkModeToggle}
